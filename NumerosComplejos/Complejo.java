@@ -14,7 +14,7 @@ public class Complejo{
     }
 
     public String toString(){
-        return this.parte_real + " + " + this.parte_imaginaria + "i";
+        return parte_imaginaria == 0 ? String.valueOf(parte_real)  : parte_imaginaria > 0 ? this.parte_real + "+" + this.parte_imaginaria + "i" : String.valueOf(this.parte_real) + this.parte_imaginaria + "i";
     }
 
     public static Complejo suma(Complejo x, Complejo y){
@@ -33,4 +33,50 @@ public class Complejo{
         float d = y.parte_imaginaria;
         return new Complejo(a*c-b*d,a*d+b*c);
     }
+
+    public static Complejo division(Complejo divisor, Complejo dividendo)
+    {
+        Complejo conjugadoDividendo = dividendo.getConjugado();
+        float denominador = multiplicación(dividendo, conjugadoDividendo).getParteReal();
+        Complejo resultado = Complejo.multiplicación(divisor,  conjugadoDividendo);
+        resultado.dividirReal(denominador);
+        return resultado;
+    }
+
+    public Complejo getConjugado(){
+        return new Complejo(parte_real,parte_imaginaria * -1);
+    }
+
+    public float getParteReal(){
+        return this.parte_real;
+    }
+    public float getParteImaginaria(){
+        return this.parte_imaginaria;
+    }
+    public void setParteReal(float real){
+        this.parte_real = real;
+    }
+    public void setParteImaginaria(float imaginaria){
+        this.parte_imaginaria = imaginaria;
+    }
+
+    public void sumarReal(float sumando){
+        this.parte_real += sumando;
+    }
+    public void restarReal(float substraendo){
+        this.parte_real -= substraendo;
+    }
+    public void multiplicarReal(float multiplicando){
+        this.parte_real *= multiplicando;
+        this.parte_imaginaria *= multiplicando;
+    }
+    public void dividirReal(float dividendo){
+        // implementar try/catch
+        if(dividendo != 0)
+        {
+            this.parte_real /= dividendo;
+            this.parte_imaginaria /= dividendo;
+        }
+    }
+
 }
