@@ -8,6 +8,10 @@ public class Complejo{
         parte_real = 0;
         parte_imaginaria = 0;
     }
+    public Complejo(float real){
+        parte_real = real;
+        parte_imaginaria = 0;
+    }
     public Complejo(float real, float imaginario){
         this.parte_real = real;
         this.parte_imaginaria = imaginario;
@@ -79,4 +83,80 @@ public class Complejo{
         }
     }
 
+    public static Complejo raizCuadrada(float n)
+    {
+        Complejo resultado = new Complejo();
+        Boolean esNegativo = n < 0;
+        n = esNegativo ? n * -1: n;
+        float raiz = 0;
+        // calcular raiz cuadrada
+        /*
+        Hay, en un comienzo, dos casos: 
+        |n| <=1 en donde raiz = n
+        - Para todo otro caso, 1 < raiz <= n/2
+        Utilizaremos la lógica de la busqueda binaria (trisección), probando el valor de (n/2) * (n/2) y, sucesivamente, ajus-
+        tando el resultado según ese producto sea mayor o menor que n.
+         */
+        if(n <= 1)
+            raiz = n;
+        else
+        {
+            float paso = n/2;
+            raiz = n - paso;
+            float producto = raiz * raiz;
+            while ( paso > 0.000001 && producto != n) /* La primera condición determina el margen de error, además de salva-
+            guardar contra el loop infinito si la representación del flotante no es suficiente para encontrar la raiz exacta*/ 
+            {
+                paso /= 2;
+                raiz = producto < n? raiz + paso: raiz - paso;
+                producto = raiz * raiz;
+            }
+        }    
+        if(esNegativo)
+            resultado.parte_imaginaria = raiz;
+        else 
+            resultado.parte_real = raiz;
+        return resultado;
+    }
+    /*
+    public static Complejo raizN(float n, int exp)
+    {
+        Complejo resultado = new Complejo();
+        Boolean esNegativo = n < 0;
+        n = esNegativo ? n * -1: n;
+        float raiz = 0;
+        // calcular raiz cuadrada
+        /*
+        Hay, en un comienzo, dos casos: 
+        |n| <=1 en donde raiz = n
+        - Para todo otro caso, 1 < raiz <= n/2
+        Utilizaremos la lógica de la busqueda binaria (trisección), probando el valor de (n/2) * (n/2) y, sucesivamente, ajus-
+        tando el resultado según ese producto sea mayor o menor que n.
+         *//*
+        if(n <= 1)
+            raiz = n;
+        else
+        {
+            float paso = n/2;
+            raiz = n - paso;
+            float producto = raiz;
+            for(int i = 1; i < exp ; i++)
+                producto *= raiz;
+            while ( paso > 0.000001 && producto != n) /* La primera condición determina el margen de error, además de salva-
+            guardar contra el loop infinito si la representación del flotante no es suficiente para encontrar la raiz exacta*/ /*
+            {
+                paso /= 2;
+                raiz = producto < n? raiz + paso: raiz - paso;
+                producto = raiz;
+                for(int i = 1; i < exp ; i++)
+                    producto *= raiz;
+            }
+        }    
+        if(esNegativo)
+            resultado.parte_imaginaria = raiz;
+        else 
+            resultado.parte_real = raiz;
+        return resultado;
+    }
+     */
 }
