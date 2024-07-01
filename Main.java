@@ -1,6 +1,6 @@
 //import java.util.Scanner;
 
-//import NumerosComplejos.Complejo;
+import NumerosComplejos.*;
 import EcuacionesPolinomiales.*;
 
 public class Main {
@@ -39,25 +39,21 @@ public class Main {
         in.close();
         */
 
-        Monomio m1 = new Monomio(4,'x',2);
-        Monomio m2 = new Monomio(3,'x',1);
-        Monomio m3 = new Monomio(2,'x',0);
+        Monomio m1 = new Monomio(1,'x',2);
+        //Monomio m2 = new Monomio(0,'x',1);
+        Monomio m3 = new Monomio(9,'x',0);
 
         Polinomio p = new Polinomio();
 
-        p.agregarMonomio(m2);
+        //p.agregarMonomio(m2);
         p.agregarMonomio(m1);
-        p.agregarMonomio(new Monomio(5,'x',3));
         p.agregarMonomio(m3);
-        p.agregarMonomio(new Monomio(6,'x',3));
 
-        System.out.println("Polinomio: " + p.toString() + "\nGrado: " + p.getGrado());
+        EcuacionPolinomial ecu = new EcuacionPolinomial(p);
 
-        p.unirTerminos();
+        Tupla<Complejo,Complejo> r = ecu.resolverPolinomial();
 
-        System.out.println("Polinomio: " + p.toString() + "\nGrado: " + p.getGrado());
-
-
+        System.out.printf("Primer resultado: %s, segundo resultado %s\n", r.primerTermino.toString(),r.segundoTermino.toString());
     }
     
 }

@@ -57,4 +57,18 @@ public class Polinomio{
             }
         }
     }
+
+    public ArrayList<Monomio> getTerminos(){
+        return this.terminos;
+    }
+
+    public float getCoeficienteDeGrado(int exponente)
+    {
+        for(int i = 0; i < terminos.size(); i++)
+        {
+            if(terminos.get(i).getExponente() == exponente)
+                return terminos.get(i).getCoeficiente();
+        }
+        return 0;
+    }
 }

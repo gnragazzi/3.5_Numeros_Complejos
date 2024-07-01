@@ -16,9 +16,17 @@ public class Complejo{
         this.parte_real = real;
         this.parte_imaginaria = imaginario;
     }
+    public Complejo(Complejo original){
+        this.parte_real = original.parte_real;
+        this.parte_imaginaria = original.parte_imaginaria;
+
+    }
 
     public String toString(){
-        return parte_imaginaria == 0 ? String.valueOf(parte_real)  : parte_imaginaria > 0 ? this.parte_real + "+" + this.parte_imaginaria + "i" : String.valueOf(this.parte_real) + this.parte_imaginaria + "i";
+        if(parte_imaginaria == 0) return String.valueOf(parte_real);
+        else if(parte_real == 0) return String.valueOf(parte_imaginaria + "i");
+        else if(parte_imaginaria > 0 ) return this.parte_real + "+" + this.parte_imaginaria + "i";
+        else return String.valueOf(this.parte_real) + this.parte_imaginaria + "i";
     }
 
     public static Complejo suma(Complejo x, Complejo y){
@@ -71,7 +79,7 @@ public class Complejo{
         this.parte_real -= substraendo;
     }
     public void multiplicarReal(float multiplicando){
-        this.parte_real *= multiplicando;
+    this.parte_real *= multiplicando;
         this.parte_imaginaria *= multiplicando;
     }
     public void dividirReal(float dividendo){
@@ -83,7 +91,7 @@ public class Complejo{
         }
     }
 
-    public static Complejo raizCuadrada(float n)
+    public static Tupla<Complejo,Complejo> raizCuadrada(float n)
     {
         Complejo resultado = new Complejo();
         Boolean esNegativo = n < 0;
@@ -116,7 +124,9 @@ public class Complejo{
             resultado.parte_imaginaria = raiz;
         else 
             resultado.parte_real = raiz;
-        return resultado;
+        Complejo raizNegativa = new Complejo(resultado);
+        raizNegativa.multiplicarReal(-1);
+        return new Tupla<Complejo,Complejo>(resultado, raizNegativa);
     }
     /*
     public static Complejo raizN(float n, int exp)

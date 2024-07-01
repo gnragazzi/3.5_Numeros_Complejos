@@ -70,6 +70,9 @@ public class Monomio implements Comparable<Monomio>{
         public int getExponente(){
             return this.exponente;
         }
+        public float getCoeficiente(){
+            return this.coeficiente;
+        }
 
 
 }
