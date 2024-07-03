@@ -46,11 +46,11 @@ public class Complejo{
         return new Complejo(a*c-b*d,a*d+b*c);
     }
 
-    public static Complejo division(Complejo divisor, Complejo dividendo)
+    public static Complejo division(Complejo dividendo, Complejo divisor)
     {
-        Complejo conjugadoDividendo = dividendo.getConjugado();
-        float denominador = multiplicación(dividendo, conjugadoDividendo).getParteReal();
-        Complejo resultado = Complejo.multiplicación(divisor,  conjugadoDividendo);
+        Complejo conjugadoDivisor = divisor.getConjugado();
+        float denominador = multiplicación(dividendo, conjugadoDivisor).getParteReal();
+        Complejo resultado = Complejo.multiplicación(dividendo,  conjugadoDivisor);
         resultado.dividirReal(denominador);
         return resultado;
     }
@@ -82,12 +82,12 @@ public class Complejo{
     this.parte_real *= multiplicando;
         this.parte_imaginaria *= multiplicando;
     }
-    public void dividirReal(float dividendo){
+    public void dividirReal(float divisor){
         // implementar try/catch
-        if(dividendo != 0)
+        if(divisor != 0)
         {
-            this.parte_real /= dividendo;
-            this.parte_imaginaria /= dividendo;
+            this.parte_real /= divisor;
+            this.parte_imaginaria /= divisor;
         }
     }
 

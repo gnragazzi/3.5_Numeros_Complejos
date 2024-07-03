@@ -1,5 +1,7 @@
 package EcuacionesPolinomiales;
 
+import java.util.ArrayList;
+
 import NumerosComplejos.*;
 
 public class EcuacionPolinomial{
@@ -33,8 +35,17 @@ public class EcuacionPolinomial{
             resNegativa.dividirReal(2*a);
             return new Tupla<Complejo,Complejo>(res, resNegativa);
         }
-        else // todavía no está implementado en polinomiales de grado > 2
+        else 
+        {
+            ArrayList<Float> posiblesCerosRacionales = p.getFactores();
+            //Polinomio aux = p;
+
+            for(Float factor: posiblesCerosRacionales)
+            {
+                p.divisionDePolinomio(factor);
+            }
             return new Tupla<>(null, null);
+        }    
     }
 
 }

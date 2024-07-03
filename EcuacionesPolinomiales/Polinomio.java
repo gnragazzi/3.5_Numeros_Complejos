@@ -1,6 +1,7 @@
 package EcuacionesPolinomiales;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Polinomio{
     private ArrayList<Monomio> terminos;
@@ -16,7 +17,9 @@ public class Polinomio{
         terminos.add(m);
         if(m.getExponente()>grado)
             grado = m.getExponente();
+        unirTerminos();
         terminos.sort(null);
+        Collections.reverse(terminos);
     }
 
     public String toString()
@@ -25,7 +28,7 @@ public class Polinomio{
 
         for(Monomio m: terminos)
         {
-            ret = String.format("%s + %s", m.toString(),ret);
+            ret = String.format("%s + %s", ret, m.toString());
         }
         ret = ret.substring(0, ret.length() - 2);
 
@@ -37,7 +40,7 @@ public class Polinomio{
         return grado;
     }
 
-    public void unirTerminos(){
+    private void unirTerminos(){
         for(int i = 0; i < terminos.size();i++)
         {
             for (int j = i + 1; j < terminos.size();j++)
@@ -70,5 +73,77 @@ public class Polinomio{
                 return terminos.get(i).getCoeficiente();
         }
         return 0;
+    }
+
+    public ArrayList<Float> getFactores(){
+        ArrayList<Integer> factoresConstante = new ArrayList<>();
+        int coeficienteConstante = (int)this.getCoeficienteDeGrado(0);
+        int i = 2;
+        factoresConstante.add(1);
+        //factores del coeficiente constante
+        while(i <= coeficienteConstante/2)
+        {
+            if(coeficienteConstante%i==0)
+            {
+                coeficienteConstante = coeficienteConstante/i;
+                if(!factoresConstante.contains(i))
+                    factoresConstante.add(i);
+                i = 2;
+            }
+            else
+                i++;
+        }
+        if(!factoresConstante.contains(coeficienteConstante))
+            factoresConstante.add(coeficienteConstante);
+        factoresConstante.add((int)getCoeficienteDeGrado(0));
+        // factores del coeficiente principal
+        ArrayList<Integer> factoresPrincipal = new ArrayList<>();
+        int coeficientePrincipal = (int)this.getCoeficienteDeGrado(2);
+        i = 2;
+        factoresPrincipal.add(1);
+        while(i <= coeficientePrincipal/2)
+        {
+            if(coeficientePrincipal%i==0)
+            {
+                coeficientePrincipal = coeficientePrincipal/i;
+                if(!factoresPrincipal.contains(i))
+                    factoresPrincipal.add(i);
+                i = 2;
+            }
+            else
+                i++;
+        }
+        if(!factoresPrincipal.contains(coeficientePrincipal))
+            factoresPrincipal.add(coeficientePrincipal);
+        factoresPrincipal.add((int)getCoeficienteDeGrado(grado));
+        // Lista de posibles ceros racionales
+        ArrayList<Float> posiblesCerosRacionales = new ArrayList<>();
+        for(i = 0; i < factoresConstante.size();i++)
+        {
+            for(int j = 0; j < factoresPrincipal.size();j++)
+                {
+                    float div = (float)factoresConstante.get(i)/factoresPrincipal.get(j);
+                    if(!posiblesCerosRacionales.contains(div))
+                    {
+                        posiblesCerosRacionales.add(div);
+                        posiblesCerosRacionales.add(div*-1);
+                    }
+                }
+        }
+        return posiblesCerosRacionales;
+    }
+    
+    public void divisionDePolinomio(float posibleFactor){
+        float resultados[] = new float[grado + 1];
+        resultados[0] = terminos.get(0).getCoeficiente();
+        System.out.print("\tfactor: " + posibleFactor+"\n");
+        for(int i = 1; i <=grado; i++){
+            resultados[i] = posibleFactor * resultados[i-1] + getCoeficienteDeGrado(grado - i);
+            System.out.printf("i= %d; resultados[i-1]: %f; getCoeficienteDeGrado(grado - i): %f; resultado[i]: %f\n",i, resultados[i-1],getCoeficienteDeGrado(grado - i), resultados[i]);
+        }
+        for(float x: resultados){
+            System.out.print(x + " | ");
+        }
+        System.out.println("\n***");
     }
 }
