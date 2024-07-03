@@ -22,11 +22,11 @@ public class Monomio implements Comparable<Monomio>{
     public String toString()
     {
         if(exponente > 1)
-            return String.format("%.2f%c^%d", coeficiente,variable,exponente);
+            return coeficiente < 0 ? String.format("- %.2f%c^%d", coeficiente * -1,variable,exponente):String.format("%.2f%c^%d", coeficiente,variable,exponente);
         else if(exponente == 1)
-            return String.format("%.2f%c", coeficiente,variable);
+            return coeficiente < 0 ? String.format("- %.2f%c", coeficiente * -1,variable):String.format("%.2f%c", coeficiente,variable);
         else
-            return String.format("%.2f", coeficiente);
+            return coeficiente < 0 ? String.format("- %.2f", coeficiente*-1) :String.format("%.2f", coeficiente);
     }
     
     public boolean equals(Object o){
@@ -73,6 +73,7 @@ public class Monomio implements Comparable<Monomio>{
         public float getCoeficiente(){
             return this.coeficiente;
         }
-
-
+        public char getVariable(){
+            return this.variable;
+        }
 }

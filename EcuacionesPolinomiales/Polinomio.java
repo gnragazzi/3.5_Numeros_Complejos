@@ -3,7 +3,7 @@ package EcuacionesPolinomiales;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Polinomio{
+public class Polinomio implements Cloneable{
     private ArrayList<Monomio> terminos;
     private int grado;
 
@@ -28,9 +28,12 @@ public class Polinomio{
 
         for(Monomio m: terminos)
         {
-            ret = String.format("%s + %s", ret, m.toString());
+            if(m.getExponente() == grado)
+                ret = ret + m.toString();
+            else
+                ret = m.getCoeficiente() < 0 ? ret +" " + m.toString():ret + " + " + m.toString();
         }
-        ret = ret.substring(0, ret.length() - 2);
+        //ret = ret.substring(0, ret.length() - 2);
 
         return ret;
     }
@@ -133,17 +136,29 @@ public class Polinomio{
         return posiblesCerosRacionales;
     }
     
-    public void divisionDePolinomio(float posibleFactor){
+    public float[] divisionDePolinomio(float c){
         float resultados[] = new float[grado + 1];
         resultados[0] = terminos.get(0).getCoeficiente();
-        System.out.print("\tfactor: " + posibleFactor+"\n");
         for(int i = 1; i <=grado; i++){
-            resultados[i] = posibleFactor * resultados[i-1] + getCoeficienteDeGrado(grado - i);
-            System.out.printf("i= %d; resultados[i-1]: %f; getCoeficienteDeGrado(grado - i): %f; resultado[i]: %f\n",i, resultados[i-1],getCoeficienteDeGrado(grado - i), resultados[i]);
+            resultados[i] = c * resultados[i-1] + getCoeficienteDeGrado(grado - i);
+            //System.out.printf("i= %d; resultados[i-1]: %f; getCoeficienteDeGrado(grado - i): %f; resultado[i]: %f\n",i, resultados[i-1],getCoeficienteDeGrado(grado - i), resultados[i]);
         }
-        for(float x: resultados){
-            System.out.print(x + " | ");
+        return resultados;
+        
+    }
+
+    public Polinomio clone() throws CloneNotSupportedException{
+        Polinomio clon = new Polinomio();
+        clon.grado = this.grado;
+        for(Monomio m: terminos){
+            Monomio aux;
+            try {
+                aux = new Monomio(m.getCoeficiente(), m.getVariable(), m.getExponente());
+                clon.terminos.add(aux);
+            } catch (Exception e) {
+                return null;
+            }
         }
-        System.out.println("\n***");
+        return clon;
     }
 }
