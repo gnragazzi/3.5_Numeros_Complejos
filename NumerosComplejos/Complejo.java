@@ -18,7 +18,13 @@ public class Complejo{
     }
 
     public String toString(){
-        return parte_imaginaria == 0 ? String.valueOf(parte_real)  : parte_imaginaria > 0 ? this.parte_real + "+" + this.parte_imaginaria + "i" : String.valueOf(this.parte_real) + this.parte_imaginaria + "i";
+        if(parte_imaginaria == 0)
+        {
+            return String.valueOf(parte_real);
+        }
+        if(parte_real == 0)
+            return String.valueOf(parte_imaginaria)+"i";
+        return parte_imaginaria > 0 ? "(" + this.parte_real + "+" + this.parte_imaginaria + "i)" : "("+String.valueOf(this.parte_real) + this.parte_imaginaria + "i)";
     }
 
     public static Complejo suma(Complejo x, Complejo y){
