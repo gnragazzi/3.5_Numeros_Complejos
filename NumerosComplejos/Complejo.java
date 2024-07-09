@@ -1,6 +1,8 @@
 package NumerosComplejos;
 
-public class Complejo{
+import EcuacionesPolinomiales.Expresión;
+
+public class Complejo extends Expresión{
     private float parte_real;
     private float parte_imaginaria;
 
@@ -128,6 +130,12 @@ public class Complejo{
         raizNegativa.multiplicarReal(-1);
         return new Tupla<Complejo,Complejo>(resultado, raizNegativa);
     }
+
+    public boolean equals(Complejo c)
+    {
+        return this.parte_real == c.parte_real && this.parte_imaginaria == c.parte_imaginaria? true:false;
+    }
+
     /*
     public static Complejo raizN(float n, int exp)
     {

@@ -76,4 +76,7 @@ public class Monomio implements Comparable<Monomio>{
         public char getVariable(){
             return this.variable;
         }
+        public void setExponente(int nuevo_exponente){
+            this.exponente = nuevo_exponente;
+        }
 }

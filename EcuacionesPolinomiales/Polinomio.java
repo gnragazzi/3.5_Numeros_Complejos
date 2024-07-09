@@ -3,6 +3,9 @@ package EcuacionesPolinomiales;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import NumerosComplejos.Complejo;
+import NumerosComplejos.Tupla;
+
 public class Polinomio implements Cloneable{
     private ArrayList<Monomio> terminos;
     private int grado;
@@ -33,7 +36,6 @@ public class Polinomio implements Cloneable{
             else
                 ret = m.getCoeficiente() < 0 ? ret +" " + m.toString():ret + " + " + m.toString();
         }
-        //ret = ret.substring(0, ret.length() - 2);
 
         return ret;
     }
@@ -99,9 +101,10 @@ public class Polinomio implements Cloneable{
         if(!factoresConstante.contains(coeficienteConstante))
             factoresConstante.add(coeficienteConstante);
         factoresConstante.add((int)getCoeficienteDeGrado(0));
+        
         // factores del coeficiente principal
         ArrayList<Integer> factoresPrincipal = new ArrayList<>();
-        int coeficientePrincipal = (int)this.getCoeficienteDeGrado(2);
+        int coeficientePrincipal = (int)this.getCoeficienteDeGrado(this.grado);
         i = 2;
         factoresPrincipal.add(1);
         while(i <= coeficientePrincipal/2)
@@ -118,8 +121,10 @@ public class Polinomio implements Cloneable{
         }
         if(!factoresPrincipal.contains(coeficientePrincipal))
             factoresPrincipal.add(coeficientePrincipal);
-        factoresPrincipal.add((int)getCoeficienteDeGrado(grado));
+        if(!factoresPrincipal.contains((int)getCoeficienteDeGrado(grado)))
+            factoresPrincipal.add((int)getCoeficienteDeGrado(grado));
         // Lista de posibles ceros racionales
+
         ArrayList<Float> posiblesCerosRacionales = new ArrayList<>();
         for(i = 0; i < factoresConstante.size();i++)
         {
@@ -141,7 +146,7 @@ public class Polinomio implements Cloneable{
         resultados[0] = terminos.get(0).getCoeficiente();
         for(int i = 1; i <=grado; i++){
             resultados[i] = c * resultados[i-1] + getCoeficienteDeGrado(grado - i);
-            //System.out.printf("i= %d; resultados[i-1]: %f; getCoeficienteDeGrado(grado - i): %f; resultado[i]: %f\n",i, resultados[i-1],getCoeficienteDeGrado(grado - i), resultados[i]);
+            System.out.printf("i= %d; resultados[i-1]: %f; getCoeficienteDeGrado(grado - i): %f; resultado[i]: %f\n",i, resultados[i-1],getCoeficienteDeGrado(grado - i), resultados[i]);
         }
         return resultados;
         
@@ -160,5 +165,90 @@ public class Polinomio implements Cloneable{
             }
         }
         return clon;
+    }
+
+    private Tupla<Expresión,Integer> factorComun(){
+        int exponenteComun = this.terminos.get(terminos.size()-1).getExponente();
+        Tupla<Expresión,Integer> ret = new Tupla<>(new Complejo(0), exponenteComun);
+        for(Monomio m:terminos){
+            m.setExponente(m.getExponente()-exponenteComun);
+        }
+        this.grado -= exponenteComun;
+        //################Falta sacar multiplos comunes#############################################################
+        return ret;
+    }
+
+    public ArrayList<Tupla<Expresión,Integer>> factorizarPolinomial() throws Exception{
+        ArrayList<Tupla<Expresión,Integer>> factores = new ArrayList<>();
+        Polinomio aux = this.clone();
+        int ceros = 0;
+        int safeguard = 0;
+
+        while(ceros + safeguard < this.grado)
+        {
+            if(aux.terminos.size() == 1)
+            {
+                factores.add(new Tupla<Expresión, Integer>(new Complejo(0), aux.grado));
+                ceros += aux.grado;
+            }
+            else if(aux.grado == 1)
+            {
+                factores.add(new Tupla<Expresión,Integer>(new ExpresiónRacional(new Monomio(-1*aux.getCoeficienteDeGrado(0),'x',0),new Monomio(aux.getCoeficienteDeGrado(1), 'x', 0)),1));
+                ceros += aux.grado;
+            }
+            else if(aux.getCoeficienteDeGrado(0) == 0)
+            {
+                
+                Tupla<Expresión,Integer> temp = aux.factorComun();
+                ceros += temp.segundoTermino;
+                factores.add(temp);
+            }
+            else if(aux.grado == 2)
+            {
+                
+                //agregar cada respuesta con multiplicidad 1
+                // retornar factores.
+                safeguard++;
+            }
+            else if(safeguard < 0)//es probable que esta opción deba estar abajo
+            {
+                //Verificar si hay 3 términos únicamente y si el termino de grado mayor es el doble del término del grado intermedio.
+                // En tal caso, es probable que estemos ante un polinomio que puede ser factorizado como cuadrado perfecto
+                //
+            }
+            else
+            {
+                /*
+                ArrayList<Float> posiblesCerosRacionales = this.getFactores();
+                Polinomio cociente;
+                    cociente = this.clone();
+                    for(Float factor: posiblesCerosRacionales)
+                    {
+                        float resultado[] = cociente.divisionDePolinomio(factor);
+                        if(resultado[cociente.getGrado()]==0)
+                        {
+                            System.out.println("División exacta. Factor: " + factor);
+                            System.out.print("Resultado: ");
+                            for(float res: resultado)
+                                System.out.print(res+" | ");
+                            System.out.println();
+                            int grado = cociente.getGrado();
+                            cociente = new Polinomio();
+                            for(int i = 0; i < grado;i++)
+                            {
+                                cociente.agregarMonomio(new Monomio(resultado[i], 'x', grado-1-i));
+                            }
+                            System.out.println(cociente.toString());
+                        }
+                    }
+                */
+                safeguard++;
+            } 
+        }
+        System.out.printf("***Se encontraron %d de %d ceros existentes***\n",ceros,grado,safeguard);
+        for(Tupla<Expresión,Integer> t:factores){
+            System.out.printf("Factor: %s, multiplicidad: %d\n",t.primerTermino.toString(),t.segundoTermino);
+        }
+        return factores;
     }
 }
